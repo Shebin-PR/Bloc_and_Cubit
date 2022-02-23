@@ -42,23 +42,39 @@ class MyHomePage extends StatelessWidget {
         title: Text(title),
         centerTitle: true,
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            BlocBuilder<CounterCubit, CounterStates>(
-              builder: (context, state) {
-                log("Button pressed stage");
-                return Text(
-                  '${state.counterValue}',
-                  style: Theme.of(context).textTheme.headline4,
-                );
-              },
-            ),
-          ],
+      body: BlocListener<CounterCubit, CounterStates>(
+        //
+        listener: (context, state) {
+          if (state.wasIncremented == true) {
+            Scaffold.of(context).showSnackBar(const SnackBar(
+              content: Text("Incremented"),
+              duration: Duration(seconds: 1),
+            ));
+          } else if (state.wasIncremented == false) {
+            Scaffold.of(context).showSnackBar(const SnackBar(
+              content: Text("Decremented"),
+              duration: Duration(seconds: 1),
+            ));
+          }
+        },
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              const Text(
+                'You have pushed the button this many times:',
+              ),
+              BlocBuilder<CounterCubit, CounterStates>(
+                builder: (context, state) {
+                  log("Button pressed stage");
+                  return Text(
+                    '${state.counterValue}',
+                    style: Theme.of(context).textTheme.headline4,
+                  );
+                },
+              ),
+            ],
+          ),
         ),
       ),
       floatingActionButton: Row(
